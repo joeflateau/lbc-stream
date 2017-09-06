@@ -75,7 +75,7 @@ createLiveStream(user, permanentToken).then(function (streamUrl) {
         "-c:v",
         "copy",
         "-c:a",
-        "aac",
+        "libfdk_aac",
         "-f",
         "flv",
         streamUrl
