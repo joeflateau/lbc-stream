@@ -4,6 +4,7 @@ stream="$1"
 i=$(date +"%s")
 
 cleanup() {
+    kill -TERM "$fblivepid"
     kill -TERM "$ffmpegpid"
     sleep 2
     kill -TERM "$ffmpegpid"
@@ -13,8 +14,10 @@ rm /var/www/*.ts
 rm /var/www/*.m3u8
 
 ffmpeg -i "rtmp://127.0.0.1/live/$1" -c:v copy -c:a libfdk_aac -b:a 128k -bsf:v h264_mp4toannexb -hls_list_size 5 -hls_time 8 -f hls /var/www/$1.m3u8 &
-
 ffmpegpid=$!
+
+node create-stream.js "rtmp://127.0.0.1/live/$1" &
+fblivepid=$!
 
 trap cleanup TERM
 
