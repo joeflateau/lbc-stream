@@ -73,27 +73,31 @@ function shortToPermanent(shortAccessToken) {
   );
 }
 
-createLiveStream(user, permanentToken).then(streamUrl => {
-  const ffmpeg = spawn(
-    "ffmpeg",
-    [
-      "-re",
-      "-i",
-      source,
-      "-c:v",
-      "copy",
-      "-c:a",
-      "libfdk_aac",
-      "-f",
-      "flv",
-      streamUrl
-    ],
-    {
-      stdio: "inherit"
-    }
-  );
+createLiveStream(user, permanentToken)
+  .then(streamUrl => {
+    const ffmpeg = spawn(
+      "ffmpeg",
+      [
+        "-re",
+        "-i",
+        source,
+        "-c:v",
+        "copy",
+        "-c:a",
+        "libfdk_aac",
+        "-f",
+        "flv",
+        streamUrl
+      ],
+      {
+        stdio: "inherit"
+      }
+    );
 
-  process.on("SIGTERM", () => {
-    ffmpeg.kill("SIGTERM");
+    process.on("SIGTERM", () => {
+      ffmpeg.kill("SIGTERM");
+    });
+  })
+  .catch(err => {
+    console.error(JSON.stringify({ message: err.message, stack: err.stack }));
   });
-});

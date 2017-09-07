@@ -67,7 +67,8 @@ function shortToPermanent(shortAccessToken) {
         });
     });
 }
-createLiveStream(user, permanentToken).then(function (streamUrl) {
+createLiveStream(user, permanentToken)
+    .then(function (streamUrl) {
     var ffmpeg = child_process_1.spawn("ffmpeg", [
         "-re",
         "-i",
@@ -85,4 +86,6 @@ createLiveStream(user, permanentToken).then(function (streamUrl) {
     process.on("SIGTERM", function () {
         ffmpeg.kill("SIGTERM");
     });
+})["catch"](function (err) {
+    console.error(JSON.stringify({ message: err.message, stack: err.stack }));
 });
