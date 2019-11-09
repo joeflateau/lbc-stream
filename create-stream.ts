@@ -30,7 +30,7 @@ function shortToLong(shortToken) {
 function getUserId(accessToken) {
   return rp({
     method: "GET",
-    uri: "https://graph.facebook.com/v2.10/me",
+    uri: "https://graph.facebook.com/v5.0/me",
     qs: {
       access_token: accessToken
     },
@@ -41,7 +41,7 @@ function getUserId(accessToken) {
 function getPermanentToken(id, accessToken) {
   return rp({
     method: "GET",
-    uri: `https://graph.facebook.com/v2.10/${id}`,
+    uri: `https://graph.facebook.com/v5.0/${id}`,
     qs: {
       fields: "access_token",
       access_token: accessToken
@@ -55,11 +55,11 @@ function getPermanentToken(id, accessToken) {
 
 function createLiveStream(id, accessToken) {
   return rp({
-    uri: `https://graph.facebook.com/v2.10/${user}/live_videos?access_token=${accessToken}`,
+    uri: `https://graph.facebook.com/v5.0/${user}/live_videos?access_token=${accessToken}`,
     method: "POST",
     json: true
   }).then(r => {
-    const streamUrl = r.stream_url;
+    const streamUrl = r.secure_stream_url;
     console.log(streamUrl);
     return streamUrl;
   });
@@ -84,7 +84,9 @@ createLiveStream(user, permanentToken)
         "-c:v",
         "copy",
         "-c:a",
-        "libfdk_aac",
+        "aac",
+        "-strict",
+        "-2",
         "-f",
         "flv",
         streamUrl
